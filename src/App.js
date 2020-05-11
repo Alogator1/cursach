@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route
+} from 'react-router-dom';
+import Login from "./modules/Login";
+import Workers from "./modules/Workers"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let tableHeader;
+
+
+class App extends Component {
+  state = {  
+    users:[]
+  }
+  componentDidMount() {
+    fetch('/employees')
+    .then(res => res.json())
+    .then(users => this.setState({users}));    
+  }  
+
+  getUsers = function(){
+    return this.props.users;
+  }
+
+  render() {     
+    return (  
+      <div className = "App">
+        <Router>
+          {/* {console.log(Object.entries(this.state.users))} */}
+          <Route path = "/" exact>
+            <Login users = {Object.entries(this.state.users)}>
+            </Login>
+          </Route>
+          <Route path = "/workers" exact>
+            <Workers>
+
+            </Workers>
+          </Route>
+        </Router>
+      </div>
+    );
+  
+  }
 }
-
+ 
 export default App;
