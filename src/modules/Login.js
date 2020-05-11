@@ -1,4 +1,5 @@
 import React, {useState, Component} from 'react';
+import {withRouter, Redirect} from 'react-router';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,7 +8,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { StepIcon } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -35,7 +35,27 @@ export default function Login({users}) {
 
   const [loginValue, setLoginValue] = useState('')  
   const [passValue, setPassValue] = useState('')
-  
+  const [isLogged, setLogInfo] = useState('false')
+
+  function checkPass(){
+      let logins = [];
+      for(let i = 0; i < users.length; i++){
+        logins.push({
+            pass: users[i].Password,
+            login: users[i].Login
+        })
+      }
+      for(let i = 0; i < logins.length; i++){
+          if(loginValue == logins[i].login && passValue == logins[i].pass){
+            setLogInfo('true');
+        }
+      }
+  }  
+  function checkIsLogged(){
+    if(isLogged == 'true')
+        return <Redirect to="/workers"/>
+    else return ;
+  }
 
   const classes = useStyles();
 
@@ -82,11 +102,12 @@ export default function Login({users}) {
             variant="contained"
             color="primary"
             onClick = {()=>{
-                console.log(this.props)
+                checkPass()
             }}
           >
             Sign In
           </Button>
+          {checkIsLogged()}
         </form>
       </div>
     </Container>

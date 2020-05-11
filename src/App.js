@@ -6,9 +6,7 @@ import {
 } from 'react-router-dom';
 import Login from "./modules/Login";
 import Workers from "./modules/Workers"
-
-let tableHeader;
-
+//import history from './history';
 
 class App extends Component {
   state = {  
@@ -28,14 +26,12 @@ class App extends Component {
     return (  
       <div className = "App">
         <Router>
-          {/* {console.log(Object.entries(this.state.users))} */}
           <Route path = "/" exact>
-            <Login users = {Object.entries(this.state.users)}>
+            <Login users = {this.state.users}>
             </Login>
           </Route>
           <Route path = "/workers" exact>
-            <Workers>
-
+            <Workers users = {this.state.users}>
             </Workers>
           </Route>
         </Router>
