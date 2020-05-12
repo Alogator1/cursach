@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, Component} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import {withRouter, Redirect} from 'react-router';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -36,8 +37,7 @@ const useStyles = makeStyles({
       textAlign:'center'
   },
   root:{
-    width:'60%',
-    marginLeft:'20%',
+    width:'100%',
     padding: '15px',
     display:'flex',
     flexDirection:'column',
@@ -46,12 +46,88 @@ const useStyles = makeStyles({
   field:{
       width:"50%",
       marginTop:'15px'
+  },
+  fieldId:{
+    width:"20%",
+    marginTop:'15px'
+  },
+  forms:{
+    display:'flex',
+    flexDirection: 'row'
+  },
+  editButtons:{
+    display:'flex',
+    flexDirection: 'row',
+  },
+  editButt:{
+    width:'60%',
+    marginTop:'15px',
+    marginRight:'15px'
   }
 });
 
 export default function Workers({users}) {
   
   const classes = useStyles();
+
+  const [fields, setFields] = useState({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''})
+
+  const [id, setId] = useState('');
+
+  function handleChange(evt) {
+    const value = evt.target.value;
+    setFields({
+      ...fields,
+      [evt.target.name]: value
+    });
+  }
+
+  function handleClick(){
+    fetch('/employees', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(fields)
+    })
+    .then(()=>{
+      setFields({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''})
+    })
+  }
+  function handleDelete(){
+    fetch('/employees', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ID: id})
+    })
+    .then(()=>{
+      setId('');
+    })
+  }
+  function handleUpdate(){
+
+    let tmpObj = {};
+    tmpObj['ID'] = id;
+    for(let propName in fields){
+      if(fields[propName] != '')
+      {
+        tmpObj[propName] = fields[propName];
+      }
+    }
+    fetch('/employees', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(tmpObj)
+    })
+    .then(()=>{
+      setId('');
+      setFields({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''});
+    })
+  }
 
   function createData() {
     let tmpData = [];
@@ -103,27 +179,84 @@ export default function Workers({users}) {
         </TableBody>
       </Table>
     </TableContainer>
+    <div className={classes.forms}>
     <form className={classes.root} noValidate autoComplete="off">
-    <TextField id="standard-basic" label="Name" className={classes.field}/>
-    <TextField id="standard-basic" label="Number" className={classes.field}/>
-    <TextField id="standard-basic" label="CityID" className={classes.field}/>
-    <TextField id="standard-basic" label="Adress" className={classes.field}/>
-    <TextField id="standard-basic" label="Login" className={classes.field}/>
-    <TextField id="standard-basic" label="Password" className={classes.field}/>
-    <TextField id="standard-basic" label="SalonID" className={classes.field}/>     
+    <TextField id="standard-basic" label="Name" className={classes.field} 
+    value={fields.WorkerName}
+    onChange={handleChange}
+    name="WorkerName"
+    />
+    <TextField id="standard-basic" label="Phone" className={classes.field}
+    value={fields.PhoneNumber}
+    onChange={handleChange}
+    name="PhoneNumber"
+    type="number"
+    />
+    <TextField id="standard-basic" label="CityID" className={classes.field}
+    value={fields.CityID}
+    onChange={handleChange}
+    name="CityID"
+    type="number"
+    />
+    <TextField id="standard-basic" label="Adress" className={classes.field}
+    value={fields.Adress}
+    onChange={handleChange}
+    name="Adress"
+    />
+    <TextField id="standard-basic" label="Login" className={classes.field}
+    value={fields.Login}
+    onChange={handleChange}
+    name="Login"
+    />
+    <TextField id="standard-basic" label="Password" className={classes.field}
+    value={fields.Password}
+    onChange={handleChange}
+    name="Password"
+    type="password"
+    />
+    <TextField id="standard-basic" label="SalonID" className={classes.field}
+    value={fields.SalonID}
+    onChange={handleChange}
+    name="SalonID"
+    type="number"
+    />     
             
-    <Button
-            //type="submit"
+    <Button            
             fullWidth
             variant="contained"
             color="primary"
             className={classes.addWorker}
+            onClick={handleClick}
           >
             Add worker
     </Button>
     </form>
-
-    
+    <form className={classes.root} noValidate autoComplete="off">
+    <TextField id="standard-basic" label="ID" className={classes.fieldId}
+    type="number"
+    value={id}
+    onChange={(e) => setId(e.target.value)}
+    name="ID"
+    />
+      <div className={classes.editButtons}>
+    <Button            
+            variant="contained"
+            className={classes.editButt}
+            onClick={handleUpdate}
+          >
+            Update
+    </Button>
+    <Button            
+            variant="contained"
+            color="secondary"
+            className={classes.addWorker}
+            onClick={handleDelete}
+          >
+            Delete
+    </Button>
+    </div>
+    </form>
+    </div>
 
     </div>
   );
