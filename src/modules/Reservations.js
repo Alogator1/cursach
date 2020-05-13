@@ -148,9 +148,13 @@ export default function Reservations({reservations, procs}) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ID: id})
+      }).then(()=>{
+        setId('');
+        setFields({ClientID: '', AgreementDate: '', AgreementTime:'', Price:'',StatusID:'', SalonID:'', WorkerID:'', ConcreteProcID:'', ConcreteName:''});
       })
     }
   }
+
   function handleUpdate(){
 
     let sendRes = {};
@@ -174,9 +178,36 @@ export default function Reservations({reservations, procs}) {
     
     for (let [key, value] of Object.entries(sendRes)) {
         if(key != 'ID' && value){
-            console.log("not epmty")
+            isResChanged = true;
         }
       }
+    for (let [key, value] of Object.entries(sendProc)) {
+        if(key != 'ID' && value){
+            isProcChanged = true;
+        }
+      }
+
+    if(isResChanged){
+        fetch('/reservations', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sendRes)
+          })
+    }
+    if(isProcChanged){
+        fetch('/procs', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sendProc)
+          }).then(()=>{
+            setId('');
+            setFields({ClientID: '', AgreementDate: '', AgreementTime:'', Price:'',StatusID:'', SalonID:'', WorkerID:'', ConcreteProcID:'', ConcreteName:''});
+          })
+    }
 
     }
   }
@@ -197,13 +228,11 @@ export default function Reservations({reservations, procs}) {
             ConcreteName: reservations[i].ConcreteName
          })
       }
-      console.log(procs);
     return tmpData;
     
   }
   
   const rows = createData();
-  console.log(rows);
   
   return (
     <div>
