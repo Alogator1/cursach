@@ -78,11 +78,11 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Workers({users}) {
+export default function Cliets({users}) {
   
   const classes = useStyles();
 
-  const [fields, setFields] = useState({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''})
+  const [fields, setFields] = useState({PIB: '', Email: '', ClientAddress:'', PhoneNumber:'',Discount:''})
 
   const [id, setId] = useState('');
 
@@ -95,7 +95,7 @@ export default function Workers({users}) {
   }
 
   function handleClick(){
-    fetch('/employees', {
+    fetch('/clients', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -103,11 +103,11 @@ export default function Workers({users}) {
       body: JSON.stringify(fields)
     })
     .then(()=>{
-      setFields({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''})
+      setFields({PIB: '', Email: '', ClientAddress:'', PhoneNumber:'',Discount:''})
     })
   }
   function handleDelete(){
-    fetch('/employees', {
+    fetch('/clients', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ export default function Workers({users}) {
         tmpObj[propName] = fields[propName];
       }
     }
-    fetch('/employees', {
+    fetch('/clients', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -137,7 +137,7 @@ export default function Workers({users}) {
     })
     .then(()=>{
       setId('');
-      setFields({WorkerName: '', PhoneNumber: '', CityID:'', Adress:'',Login:'', Password:'', SalonID:''});
+      setFields({PIB: '', Email: '', ClientAddress:'', PhoneNumber:'',Discount:''});
     })
   }
 
@@ -146,11 +146,11 @@ export default function Workers({users}) {
     for(let i = 0; i < users.length; i++){
         tmpData.push({
             ID: users[i].ID,
-            CityID: users[i].CityID ,
-            Adress: users[i].Adress,
+            PIB: users[i].PIB ,
+            Email: users[i].Email,
+            ClientAddress: users[i].ClientAddress,
             PhoneNumber: users[i].PhoneNumber,
-            SalonID: users[i].SalonID,
-            WorkerName: users[i].WorkerName,
+            Discount: users[i].Discount,
          })
       }
     return tmpData;
@@ -161,18 +161,18 @@ export default function Workers({users}) {
   return (
     <div>
     <h1 className={classes.hed}>
-        Workers
+        Clients
     </h1>
     <TableContainer component={Paper} className={classes.container}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell className={classes.tableHead}>ID</TableCell>
-            <TableCell align="right" className={classes.tableHead}>Name</TableCell>
-            <TableCell align="right" className={classes.tableHead}>CityID</TableCell>
-            <TableCell align="right" className={classes.tableHead}>Adress</TableCell>
-            <TableCell align="right" className={classes.tableHead}>SalonID</TableCell>
+            <TableCell align="right" className={classes.tableHead}>PIB</TableCell>
+            <TableCell align="right" className={classes.tableHead}>Email</TableCell>
+            <TableCell align="right" className={classes.tableHead}>ClientAddress</TableCell>
             <TableCell align="right" className={classes.tableHead}>PhoneNumber</TableCell>
+            <TableCell align="right" className={classes.tableHead}>Discount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -181,11 +181,11 @@ export default function Workers({users}) {
               <TableCell component="th" scope="row">
                 {row.ID}
               </TableCell>
-              <TableCell align="right">{row.WorkerName}</TableCell>
-              <TableCell align="right">{row.CityID}</TableCell>
-              <TableCell align="right">{row.Adress}</TableCell>
-              <TableCell align="right">{row.SalonID}</TableCell>
+              <TableCell align="right">{row.PIB}</TableCell>
+              <TableCell align="right">{row.Email}</TableCell>
+              <TableCell align="right">{row.ClientAddress}</TableCell>
               <TableCell align="right">{row.PhoneNumber}</TableCell>
+              <TableCell align="right">{row.Discount}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -194,44 +194,33 @@ export default function Workers({users}) {
     <div className={classes.forms}>
     <form className={classes.root} noValidate autoComplete="off">
     <TextField id="standard-basic" label="Name" className={classes.field} 
-    value={fields.WorkerName}
+    value={fields.PIB}
     onChange={handleChange}
-    name="WorkerName"
+    name="PIB"
     />
-    <TextField id="standard-basic" label="Phone" className={classes.field}
+    <TextField id="standard-basic" label="Email" className={classes.field}
+    value={fields.Email}
+    onChange={handleChange}
+    name="Email"
+    type="email"
+    />
+    <TextField id="standard-basic" label="ClientAddress" className={classes.field}
+    value={fields.ClientAddress}
+    onChange={handleChange}
+    name="ClientAddress"
+    />
+    <TextField id="standard-basic" label="PhoneNumber" className={classes.field}
     value={fields.PhoneNumber}
     onChange={handleChange}
     name="PhoneNumber"
     type="number"
     />
-    <TextField id="standard-basic" label="CityID" className={classes.field}
-    value={fields.CityID}
+    <TextField id="standard-basic" label="Discount" className={classes.field}
+    value={fields.Discount}
     onChange={handleChange}
-    name="CityID"
+    name="Discount"
     type="number"
-    />
-    <TextField id="standard-basic" label="Adress" className={classes.field}
-    value={fields.Adress}
-    onChange={handleChange}
-    name="Adress"
-    />
-    <TextField id="standard-basic" label="Login" className={classes.field}
-    value={fields.Login}
-    onChange={handleChange}
-    name="Login"
-    />
-    <TextField id="standard-basic" label="Password" className={classes.field}
-    value={fields.Password}
-    onChange={handleChange}
-    name="Password"
-    type="password"
-    />
-    <TextField id="standard-basic" label="SalonID" className={classes.field}
-    value={fields.SalonID}
-    onChange={handleChange}
-    name="SalonID"
-    type="number"
-    />     
+    />   
             
     <Button            
             fullWidth
@@ -240,7 +229,7 @@ export default function Workers({users}) {
             className={classes.addWorker}
             onClick={handleClick}
           >
-            Add worker
+            Add client
     </Button>
     </form>
     <div className={classes.buttonsForms}>
@@ -274,9 +263,9 @@ export default function Workers({users}) {
           
             color="primary"
             className={classes.goButtons}
-            href="/clients"
+            href="/workers"
           >
-            Go to clients
+            Go to workers
     </Button>
     <Button            
             color="primary"
@@ -288,7 +277,6 @@ export default function Workers({users}) {
     </form>
     </div>
     </div>
-
     </div>
   );
 }
