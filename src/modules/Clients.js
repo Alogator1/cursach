@@ -10,6 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
+import Navbar from './components/Navbar'
+
 
 
 const useStyles = makeStyles({
@@ -34,7 +36,8 @@ const useStyles = makeStyles({
   hed:{
       fontFamily:'Courier New',
       fontSize:'50px',
-      textAlign:'center'
+      textAlign:'center',
+      marginTop: 0
   },
   root:{
     width:'60%',
@@ -160,6 +163,7 @@ export default function Cliets({users}) {
   
   return (
     <div>
+      <Navbar></Navbar>
     <h1 className={classes.hed}>
         Clients
     </h1>
@@ -257,23 +261,6 @@ export default function Cliets({users}) {
             Delete
     </Button>
     </div>
-    </form>
-    <form className={classes.goForm}>
-    <Button            
-          
-            color="primary"
-            className={classes.goButtons}
-            href="/workers"
-          >
-            Go to workers
-    </Button>
-    <Button            
-            color="primary"
-            className={classes.goButtons}
-            href="/reservations"
-          >
-            Go to reservations
-    </Button>
     </form>
     </div>
     </div>
